@@ -348,15 +348,6 @@ Cliente HTTP
 
 ---
 
-## 👤 Autor
-
-- **GitHub:** [sarapmc](https://github.com/SaraPMC)
-- **Email (GitHub):** sarapmc@hotmail.com
-- **Email (Google Cloud):** sarapmcantao@gmail.com
-- **Repositório:** https://github.com/SaraPMC/GO-desafio-deploy-google-cloud-run
-
----
-
 ## 📄 Licença
 
 Este projeto está sob a licença **MIT**. Veja [LICENSE](LICENSE) para detalhes.

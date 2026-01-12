@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/SaraPMC/GO-desafio-deploy-google-cloud-run/internal/entity"
@@ -41,8 +42,9 @@ func NewWeatherService() *WeatherService {
 
 // GetWeather fetches current weather for a given city
 func (w *WeatherService) GetWeather(city string) (*entity.Weather, error) {
-	// Build URL for WeatherAPI
-	url := fmt.Sprintf("%s/current.json?key=%s&q=%s", w.baseURL, w.apiKey, city)
+	// Build URL for WeatherAPI with proper encoding
+	encodedCity := url.QueryEscape(city)
+	url := fmt.Sprintf("%s/current.json?key=%s&q=%s", w.baseURL, w.apiKey, encodedCity)
 
 	// Make HTTP request
 	resp, err := w.httpClient.Get(url)
