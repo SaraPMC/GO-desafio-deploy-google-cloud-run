@@ -5,8 +5,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
-	"github.com/sarapmc/weather-app/internal/infra/service"
-	"github.com/sarapmc/weather-app/internal/usecase"
+	"github.com/SaraPMC/GO-desafio-deploy-google-cloud-run/internal/infra/service"
+	"github.com/SaraPMC/GO-desafio-deploy-google-cloud-run/internal/usecase"
 )
 
 // Router creates and configures the HTTP router

@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/sarapmc/weather-app/internal/usecase"
+	"github.com/SaraPMC/GO-desafio-deploy-google-cloud-run/internal/usecase"
 )
 
 // WeatherHandler handles HTTP requests for weather

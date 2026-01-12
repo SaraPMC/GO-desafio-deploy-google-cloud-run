@@ -6,9 +6,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/sarapmc/weather-app/internal/entity"
-	"github.com/sarapmc/weather-app/internal/infra/service"
-	"github.com/sarapmc/weather-app/internal/usecase"
+	"github.com/SaraPMC/GO-desafio-deploy-google-cloud-run/internal/entity"
+	"github.com/SaraPMC/GO-desafio-deploy-google-cloud-run/internal/infra/service"
+	"github.com/SaraPMC/GO-desafio-deploy-google-cloud-run/internal/usecase"
 )
 
 type mockViaCEPService struct {

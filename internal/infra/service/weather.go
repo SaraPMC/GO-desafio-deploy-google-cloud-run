@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/sarapmc/weather-app/internal/entity"
+	"github.com/SaraPMC/GO-desafio-deploy-google-cloud-run/internal/entity"
 )
 
 // WeatherAPIResponse represents the response from WeatherAPI

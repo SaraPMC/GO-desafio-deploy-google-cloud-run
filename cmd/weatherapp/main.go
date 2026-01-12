@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/sarapmc/weather-app/internal/infra/web"
+	"github.com/SaraPMC/GO-desafio-deploy-google-cloud-run/internal/infra/web"
 )
 
 func main() {

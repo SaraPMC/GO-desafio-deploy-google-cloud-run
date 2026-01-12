@@ -3,8 +3,8 @@ package usecase
 import (
 	"fmt"
 
-	"github.com/sarapmc/weather-app/internal/entity"
-	"github.com/sarapmc/weather-app/internal/infra/service"
+	"github.com/SaraPMC/GO-desafio-deploy-google-cloud-run/internal/entity"
+	"github.com/SaraPMC/GO-desafio-deploy-google-cloud-run/internal/infra/service"
 )
 
 // GetWeatherByZipCodeUseCase is the use case for getting weather by zipcode

@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/sarapmc/weather-app/internal/entity"
+	"github.com/SaraPMC/GO-desafio-deploy-google-cloud-run/internal/entity"
 )
 
 // ViaCEPService is responsible for fetching location data from ViaCEP API

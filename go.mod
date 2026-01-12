@@ -1,4 +1,4 @@
-module github.com/sarapmc/weather-app
+module github.com/SaraPMC/GO-desafio-deploy-google-cloud-run
 
 go 1.23
 
