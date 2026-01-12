@@ -3,10 +3,10 @@ package web
 import (
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/cors"
 	"github.com/SaraPMC/GO-desafio-deploy-google-cloud-run/internal/infra/service"
 	"github.com/SaraPMC/GO-desafio-deploy-google-cloud-run/internal/usecase"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/cors"
 )
 
 // Router creates and configures the HTTP router

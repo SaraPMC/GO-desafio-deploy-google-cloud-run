@@ -12,6 +12,7 @@
 Este projeto é resultado de um **desafio prático** de desenvolvimento em Go e deploy em Google Cloud Run. O sistema recebe um CEP (código de endereçamento postal brasileiro), identifica a cidade correspondente e retorna informações do clima atual em diferentes unidades de temperatura.
 
 ### 🎯 Objetivo do Desafio
+
 Desenvolver um microsserviço em Go que:
 - ✅ Receba um CEP válido (8 dígitos)
 - ✅ Consulte a localização via API ViaCEP
@@ -26,72 +27,64 @@ Desenvolver um microsserviço em Go que:
 - ✅ **Consulta Meteorológica** - Integração com WeatherAPI para dados climáticos
 - ✅ **Conversão de Temperaturas** - Celsius → Fahrenheit, Kelvin
 - ✅ **Validação de Entrada** - Formato correto de CEP (8 dígitos)
-- ✅ **Tratamento de Erros** - Respostas HTTP padronizadas
+- ✅ **Tratamento de Erros** - Respostas HTTP padronizadas (200, 422, 404, 500)
 - ✅ **Clean Architecture** - Separação clara de responsabilidades
 - ✅ **Docker & Docker Compose** - Containerização para testes locais
+- ✅ **Testes Automatizados** - Unit tests inclusos
 - ✅ **Cloud Run Ready** - Deploy com um comando
 
 ---
 
-## 🚀 Como Executar
+## 🚀 Quick Start (5 minutos)
 
 ### Pré-requisitos
 
 - [Go 1.23+](https://golang.org/dl/)
 - [Docker](https://www.docker.com/) e [Docker Compose](https://docs.docker.com/compose/)
-- Conta no [WeatherAPI](https://www.weatherapi.com/) com API Key *(free tier disponível)*
+- Conta no [WeatherAPI](https://www.weatherapi.com/) (free tier)
 
-### ✨ Execução com Docker Compose
+### 1️⃣ Configurar Variáveis de Ambiente
 
-🚀 Subir a aplicação
 ```bash
-# 1. Configurar variáveis de ambiente
 cp .env.example .env
-# Edite .env e adicione sua WEATHER_API_KEY
-
-# 2. Iniciar o container
-docker-compose up --build -d
-
-# 3. Verificar logs
-docker-compose logs -f app
+# Edite .env e adicione sua WEATHER_API_KEY de https://www.weatherapi.com/
 ```
 
-### ✅ Confirmação do Serviço
-
-Quando tudo estiver funcionando, você verá:
-```
-Starting Weather App on port 8080
-```
-
-### 🔄 Comandos Úteis
+### 2️⃣ Executar Localmente
 
 ```bash
-# Status dos containers
-docker-compose ps
-
-# Parar serviços
-docker-compose down
-
-# Rebuild completo (limpar volumes)
-docker-compose down -v
+# Subir com Docker Compose
 docker-compose up --build -d
 
-# Ver logs em tempo real
+# Ver logs
 docker-compose logs -f app
+
+# Testar
+curl http://localhost:8080/
+curl "http://localhost:8080/weather?cep=01310100"
+
+# Parar
+docker-compose down
 ```
 
 ---
 
-## 🧪 Como Testar
+## 🧪 Endpoints & Testes
 
-### 🌐 **REST API** - Porta 8080
+### 🌐 REST API
 
-#### ✅ Sucesso - CEP Válido
-```http
-GET http://localhost:8080/weather?cep=01310100
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `GET` | `/` | Health check |
+| `GET` | `/weather?cep=XXXXXXXX` | Buscar clima por CEP |
+
+### ✅ Exemplo de Sucesso
+
+```bash
+curl "http://localhost:8080/weather?cep=01310100"
 ```
 
-**Response (200 OK):**
+**Response (HTTP 200):**
 ```json
 {
   "temp_C": 28.5,
@@ -100,130 +93,92 @@ GET http://localhost:8080/weather?cep=01310100
 }
 ```
 
-#### ❌ Erro - CEP Inválido (formato)
-```http
-GET http://localhost:8080/weather?cep=123
+### ❌ Exemplo de Erro - CEP Inválido
+
+```bash
+curl "http://localhost:8080/weather?cep=123"
 ```
 
-**Response (422 Unprocessable Entity):**
+**Response (HTTP 422):**
 ```json
 {
   "message": "invalid zipcode"
 }
 ```
 
-#### ❌ Erro - CEP Não Encontrado
-```http
-GET http://localhost:8080/weather?cep=99999999
+### ❌ Exemplo de Erro - CEP Não Encontrado
+
+```bash
+curl "http://localhost:8080/weather?cep=99999999"
 ```
 
-**Response (404 Not Found):**
+**Response (HTTP 404):**
 ```json
 {
   "message": "can not find zipcode"
 }
 ```
 
-#### 🏥 Health Check
-```http
-GET http://localhost:8080/
-```
+### 🧪 Testes com arquivos HTTP
 
-**Response (200 OK):**
-```json
-{
-  "status": "ok"
-}
-```
+A pasta `api/` contém arquivos `.http` para testar:
+- `health_check.http` - Health check
+- `get_weather_success.http` - CEP válido
+- `get_weather_invalid.http` - CEP inválido
+- `get_weather_notfound.http` - CEP não existe
 
-> 📁 **Arquivos de teste:** Veja pasta `api/` para testes HTTP prontos
-
----
-
-## 📊 Arquitetura
-
-```
-🐳 DOCKER ARCHITECTURE
-┌──────────────────────────────────────┐
-│         Container Services           │
-│      Weather App :8080               │
-│                                      │
-│  ├─ ViaCEP API (https)               │
-│  └─ WeatherAPI (https)               │
-└──────────────────────────────────────┘
-           ⬇️
-┌──────────────────────────────────────┐
-│        APPLICATION LAYERS            │
-│  REST API (Chi Router)               │
-├──────────────────────────────────────┤
-│         Use Cases                    │
-│  GetWeatherByZipCode                 │
-├──────────────────────────────────────┤
-│         Entities                     │
-│  Weather, Location                   │
-├──────────────────────────────────────┤
-│       Infrastructure                 │
-│  ViaCEP Service  │  WeatherAPI       │
-└──────────────────────────────────────┘
-```
+Use com VS Code REST Client (extensão: humao.rest-client)
 
 ---
 
 ## 📁 Estrutura do Projeto
 
 ```
-weather-app/
-├── cmd/
-│   └── weatherapp/           # Aplicação principal
-│       └── main.go           # Entry point
+.
+├── cmd/weatherapp/              # Aplicação principal
+│   └── main.go                  # Entry point
 ├── internal/
-│   ├── entity/               # Entidades de domínio
+│   ├── entity/                  # Entidades de domínio
 │   │   └── weather.go
-│   ├── usecase/              # Casos de uso
+│   ├── usecase/                 # Casos de uso (business logic)
 │   │   └── get_weather_by_zipcode.go
-│   └── infra/                # Infraestrutura
-│       ├── service/          # Serviços externos
-│       │   ├── viacep.go     # Integração ViaCEP
-│       │   └── weather.go    # Integração WeatherAPI
-│       └── web/              # HTTP
-│           ├── handler.go    # Handlers
-│           └── server.go     # Router
-├── api/                      # Testes HTTP
-│   ├── health_check.http
-│   ├── get_weather_success.http
-│   ├── get_weather_invalid.http
-│   └── get_weather_notfound.http
-├── tests/                    # Testes automatizados
-├── Dockerfile                # Build para Docker
-├── docker-compose.yml        # Orquestração
-├── .env.example              # Variáveis de ambiente
+│   └── infra/                   # Infraestrutura
+│       ├── service/             # Serviços externos
+│       │   ├── viacep.go        # API ViaCEP
+│       │   ├── viacep_test.go   # Testes ViaCEP
+│       │   └── weather.go       # API WeatherAPI
+│       └── web/                 # HTTP
+│           ├── handler.go       # HTTP handlers
+│           ├── handler_test.go  # Testes handlers
+│           └── server.go        # Router e server
+├── api/                         # Testes HTTP (.http files)
+├── Dockerfile                   # Build para Docker
+├── docker-compose.yml           # Orquestração
+├── go.mod                       # Dependências Go
+├── go.sum                       # Lock file
+├── .env.example                 # Template de variáveis
 ├── .gitignore
-├── go.mod                    # Dependências
-└── README.md
+├── LICENSE                      # MIT
+└── README.md                    # Este arquivo
 ```
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## 🔧 Tecnologias Utilizadas
 
-### Core
-- **Go 1.23** - Linguagem principal
-- **Chi Router** - HTTP router minimalista e poderoso
-- **Standard Library** - Sem dependências pesadas
-
-### APIs Externas
-- **ViaCEP** - Busca de localização por CEP
-- **WeatherAPI** - Dados meteorológicos em tempo real
-
-### DevOps
-- **Docker** - Containerização
-- **Docker Compose** - Orquestração local
+| Categoria | Tecnologia |
+|-----------|-----------|
+| **Linguagem** | Go 1.23 |
+| **HTTP Router** | Chi v5 |
+| **APIs Externas** | ViaCEP, WeatherAPI |
+| **Containerização** | Docker, Docker Compose |
+| **Cloud** | Google Cloud Run |
+| **Arquitetura** | Clean Architecture |
+| **Testes** | Go testing package |
 
 ---
 
 ## 📐 Fórmulas de Conversão
-
-As conversões de temperatura utilizadas no projeto:
 
 $$\text{Fahrenheit} = \text{Celsius} \times 1.8 + 32$$
 
@@ -233,89 +188,119 @@ $$\text{Kelvin} = \text{Celsius} + 273$$
 
 ## ☁️ Deploy no Google Cloud Run
 
-### 📝 Pré-requisitos
+### Pré-requisitos
 
-1. Conta no [Google Cloud](https://console.cloud.google.com/)
+1. Conta em [Google Cloud Console](https://console.cloud.google.com/)
 2. Projeto criado no GCP
-3. [gcloud CLI](https://cloud.google.com/sdk) instalado e autenticado
+3. [gcloud CLI](https://cloud.google.com/sdk) instalado
 
-### 🚀 Deploy Automático
+### Passo-a-Passo
+
+#### 1. Autenticar
 
 ```bash
-# 1. Fazer login no GCP
 gcloud auth login
-
-# 2. Definir projeto
 gcloud config set project YOUR_PROJECT_ID
+```
 
-# 3. Fazer build e push da imagem
+#### 2. Deploy
+
+```bash
 gcloud run deploy weather-app \
   --source . \
   --platform managed \
   --region us-central1 \
   --allow-unauthenticated \
-  --set-env-vars WEATHER_API_KEY=YOUR_API_KEY
+  --set-env-vars WEATHER_API_KEY=your_api_key_here
 ```
 
-### 📍 Acessar a Aplicação
+#### 3. Testar
 
-Após deploy bem-sucedido, você receberá uma URL como:
+Após sucesso, você receberá uma URL como:
 ```
 https://weather-app-xxxxx-uc.a.run.app
 ```
 
-Teste a aplicação:
+Teste:
 ```bash
-# Health check
 curl https://weather-app-xxxxx-uc.a.run.app/
-
-# Buscar clima
 curl "https://weather-app-xxxxx-uc.a.run.app/weather?cep=01310100"
+```
+
+#### 4. Ver Logs
+
+```bash
+gcloud run services logs read weather-app --region us-central1 --limit 50
 ```
 
 ---
 
-## 🧪 Testes
+## 🧪 Testes Automatizados
 
-### Executar Testes Locais
+### Executar Testes
 
 ```bash
-# Build a imagem
-docker-compose build
+# Todos os testes
+go test ./...
 
-# Rodar testes HTTP (usando VS Code REST Client ou Postman)
-# Abra os arquivos em api/ e envie as requisições
+# Com coverage
+go test -cover ./...
+
+# Verbose
+go test -v ./...
 ```
 
-### Teste com curl
+### Testes Implementados
+
+- ✅ Validação de CEP (formato correto)
+- ✅ Busca de localização (ViaCEP)
+- ✅ Health check endpoint
+- ✅ Weather endpoint
+- ✅ Tratamento de erros
+
+---
+
+## 🔄 Comandos Úteis
 
 ```bash
-# Health check
-curl http://localhost:8080/
+# Build da imagem
+docker-compose build
 
-# CEP válido (sucesso)
-curl "http://localhost:8080/weather?cep=01310100"
+# Iniciar containers
+docker-compose up -d
 
-# CEP inválido (error 422)
-curl "http://localhost:8080/weather?cep=123"
+# Ver status
+docker-compose ps
 
-# CEP não encontrado (error 404)  
-curl "http://localhost:8080/weather?cep=99999999"
+# Ver logs
+docker-compose logs -f app
+
+# Parar containers
+docker-compose down
+
+# Remover volumes (reset completo)
+docker-compose down -v
 ```
 
 ---
 
 ## 🐛 Troubleshooting
 
-### API Key Inválida
+### API Key não funciona
+
 ```
-❌ Error: "error: unable to fetch weather data"
+Error: "error: unable to fetch weather data"
 ```
-**Solução:** Verifique se `WEATHER_API_KEY` está definida corretamente em `.env`
+
+**Solução:**
+1. Verifique se a chave está correta em `.env`
+2. Testei com: `8c841b5ab4804b9d9ea14925261201`
+3. Obtenha nova em: https://www.weatherapi.com/
 
 ### Container não inicia
+
 ```bash
-# Verificar logs
+# Ver erro
 docker-compose logs app
 
 # Rebuild limpo
@@ -323,26 +308,58 @@ docker-compose down -v
 docker-compose up --build -d
 ```
 
-### Porta já em uso
+### Porta 8080 em uso
+
+Edite `docker-compose.yml`:
+```yaml
+ports:
+  - "8081:8080"  # Mudou para 8081
+```
+
+### Module not found
+
 ```bash
-# Mudar porta em docker-compose.yml
-# Altere: "8080:8080" para "8081:8080"
-docker-compose up --build -d
+# Limpar cache e baixar dependências novamente
+go clean -modcache
+go mod tidy
+```
+
+---
+
+## 📊 Arquitetura
+
+```
+Entrada HTTP
+    ↓
+handler.GetWeatherByZipCode (web/handler.go)
+    ↓
+usecase.Execute (usecase/get_weather_by_zipcode.go)
+    ↓
+service.GetLocation (infra/service/viacep.go)
+    ↓ [ViaCEP API]
+    ↓
+service.GetWeather (infra/service/weather.go)
+    ↓ [WeatherAPI]
+    ↓
+Resposta JSON (entity.Weather)
+    ↓
+Cliente HTTP
 ```
 
 ---
 
 ## 👤 Autor
 
-- **GitHub:** [sarapmc](https://github.com/sarapmc)
-- **Email (GitHub):** sarapmc@hotmail.com  
+- **GitHub:** [sarapmc](https://github.com/SaraPMC)
+- **Email (GitHub):** sarapmc@hotmail.com
 - **Email (Google Cloud):** sarapmcantao@gmail.com
+- **Repositório:** https://github.com/SaraPMC/GO-desafio-deploy-google-cloud-run
 
 ---
 
 ## 📄 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+Este projeto está sob a licença **MIT**. Veja [LICENSE](LICENSE) para detalhes.
 
 ---
 
