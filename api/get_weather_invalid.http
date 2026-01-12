@@ -1,0 +1,2 @@
+### Test Weather API - Invalid Zipcode (wrong format)
+GET http://localhost:8080/weather?cep=123

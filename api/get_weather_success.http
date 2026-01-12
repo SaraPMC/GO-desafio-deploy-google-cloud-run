@@ -1,0 +1,2 @@
+### Test Weather API - Success Case
+GET http://localhost:8080/weather?cep=01310100

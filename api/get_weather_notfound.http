@@ -1,0 +1,2 @@
+### Test Weather API - Zipcode Not Found
+GET http://localhost:8080/weather?cep=99999999
