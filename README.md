@@ -227,6 +227,53 @@ curl https://weather-app-xxxxx-uc.a.run.app/
 curl "https://weather-app-xxxxx-uc.a.run.app/weather?cep=01310100"
 ```
 
+---
+
+## 🌐 Aplicação Deployada
+
+**URL em Produção (Google Cloud Run):**
+```
+https://go-desafio-deploy-google-cloud-run-946183086788.us-central1.run.app
+```
+
+### Exemplos de Requisições
+
+#### Health Check
+```bash
+curl https://go-desafio-deploy-google-cloud-run-946183086788.us-central1.run.app/
+```
+**Resposta:**
+```json
+{"status":"ok"}
+```
+
+#### Busca de CEP Válido
+```bash
+curl "https://go-desafio-deploy-google-cloud-run-946183086788.us-central1.run.app/weather?cep=01310100"
+```
+**Resposta:**
+```json
+{"temp_C":21.2,"temp_F":70.16,"temp_K":294.2}
+```
+
+#### CEP Inválido (Erro 422)
+```bash
+curl "https://go-desafio-deploy-google-cloud-run-946183086788.us-central1.run.app/weather?cep=123"
+```
+**Resposta:**
+```json
+{"message":"invalid zipcode"}
+```
+
+#### CEP Não Encontrado (Erro 404)
+```bash
+curl "https://go-desafio-deploy-google-cloud-run-946183086788.us-central1.run.app/weather?cep=99999999"
+```
+**Resposta:**
+```json
+{"message":"can not find zipcode"}
+```
+
 #### 4. Ver Logs
 
 ```bash
